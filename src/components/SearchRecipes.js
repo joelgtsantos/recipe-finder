@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, FormControl, ControlLabel, Button} from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { setRecipes } from '../actions/';
 
 class SeachRecipes extends Component{
 
@@ -10,8 +12,14 @@ class SeachRecipes extends Component{
 
   search = () => {
     let {ingredients, dish} = this.state;
-    const url = `http://www.recipepuppy.com/api/i=${ingredients}&q=${dish}`;
-    console.log('url', url);
+    const url = `http://www.recipepuppy.com/api/?i=${ingredients}&q=${dish}`;
+    fetch(url, {
+      method: 'GET'
+    })
+    .then(response => response.json())
+    .then(json => {
+      this.props.setRecipes(json.results)
+    });
   }
 
   render(){
@@ -43,4 +51,4 @@ class SeachRecipes extends Component{
   }
 }
 
-export default SeachRecipes;
+export default connect(null, { setRecipes })(SeachRecipes);
